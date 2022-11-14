@@ -1,6 +1,6 @@
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 const Web3 = require('web3');
-const compiledNFTFactory = require('./build/contracts.json');
+const compiledGumContract = require('./build/contracts.json');
 
 const provider = new HDWalletProvider(
   "rabbit west enjoy female armed seat early desert unknown shoulder hollow city",
@@ -16,9 +16,9 @@ const deploy = async () => {
   console.log('Attempting to deploy from account', accounts[0]);
 
   const result = await new web3.eth.Contract(
-    compiledNFTFactory.nft.MyToken.abi
+    compiledGumContract.nft.Gum.abi
   )
-    .deploy({ data: compiledNFTFactory.nft.MyToken.evm.bytecode.object})
+    .deploy({ data: compiledGumContract.nft.Gum.evm.bytecode.object})
     .send({ gas: '7000000', from: accounts[0] });
 
   console.log('Contract deployed to', result.options.address);
