@@ -6,6 +6,9 @@ import { Form, Message, Input, Button, Image } from 'semantic-ui-react';
 import gum from '../ethereum/gum';
 import { web3 } from '../ethereum/web3';
 import ipfs from '../ethereum/ipfs';
+import data from '../ethereum/data.json';
+import $ from 'jquery';
+
 
 
 class Home extends Component {
@@ -18,7 +21,8 @@ class Home extends Component {
 
   state = {
     address: '',
-    errorMessage: ''
+    errorMessage: '',
+    metaDataUrl: ''
   };
 
   captureFile = (event) => {
@@ -26,7 +30,6 @@ class Home extends Component {
         event.stopPropagation()
         event.preventDefault()
         const file = event.target.files[0]
-        console.log(file);
         let reader = new window.FileReader()
         reader.readAsArrayBuffer(file)
         reader.onloadend = () => this.convertToBuffer(reader)
@@ -45,10 +48,14 @@ class Home extends Component {
       const accounts = await web3.eth.getAccounts();
       console.log('Sending from Metamask account: ' + accounts[0]);
 
-      const result = await ipfs.add(this.state.buffer);
+      const cid = await ipfs.add(this.state.buffer);
+
+      const result = await ipfs.add(JSON.stringify(data));
+      const metadata = "https://gumwall.infura-ipfs.io/ipfs/" + result.path
+      console.log(metadata);
 
       await gum.methods
-       .safeMint(this.state.address, result.path)
+       .safeMint(this.state.address, metadata)
        .send({ from: accounts[0] });
 
         console.log("successful submit");
@@ -57,9 +64,9 @@ class Home extends Component {
     }
   }
 
-  renderImages() {
+   renderImages() {
+
     const gums = this.props.gumHashes.map((hash, index) => {
-      console.log("image");
       return <Gumwall
         hash={this.props.gumHashes[index]}
       />;
@@ -67,8 +74,16 @@ class Home extends Component {
     return gums;
   }
 
+  async load() {
+    let url = 'https://gumwall.infura-ipfs.io/ipfs/Qmd2qnLw9NbYsLiLaojhW5YLtR6DyKueUcXxzjC2hWYhfx';
+    let obj = await (await fetch(url)).json().then(function(result){
+           return result.image;
+         });
+        console.log(obj);
+      }
+
   render() {
-    // console.log(this.props.gumHashes[2])
+    console.log(this.load())
     return (
       <Layout>
        <h1>Diffusion Sea - {this.state.ipfsHash}</h1>

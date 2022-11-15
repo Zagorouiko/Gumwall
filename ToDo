@@ -1,5 +1,16 @@
 0x8207765467f0A1fc8777cFA314dC4280072239b4
 
-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
+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
 
-git remote set-url origin https://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@github.com/Zagorouiko/Gumwall.git
+git remote set-url origin https://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@github.com/Zagorouiko/Gumwall.git
+
+https://gumwall.infura-ipfs.io/ipfs/QmckQ297XZ6Afe6H37ZkBmMk9K4fX85Wb7MxZ5uzssfjEV/metadata.json
+QmckQ297XZ6Afe6H37ZkBmMk9K4fX85Wb7MxZ5uzssfjEV
+
+
+https://gumwall.infura-ipfs.io/ipfs/Qmd2qnLw9NbYsLiLaojhW5YLtR6DyKueUcXxzjC2hWYhfx
+
+const meta = $.getJSON(this.props.hash, function(data) {
+  return data;
+});
+console.log(meta);
