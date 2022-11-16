@@ -19,6 +19,10 @@ class Home extends Component {
     return { gumHashes }
   }
 
+  componentDidMount() {
+    this.load();
+  }
+
   state = {
     address: '',
     errorMessage: '',
@@ -48,8 +52,14 @@ class Home extends Component {
       const accounts = await web3.eth.getAccounts();
       console.log('Sending from Metamask account: ' + accounts[0]);
 
+      //Hash that I get back for the file upload
       const cid = await ipfs.add(this.state.buffer);
 
+
+      //Take a wack at getting ipfs.add to work without sending in a file
+      //If can't get to work then look into using axios w/ pinata node
+
+      //Hash that I get back from uploading the metadata JSON
       const result = await ipfs.add(JSON.stringify(data));
       const metadata = "https://gumwall.infura-ipfs.io/ipfs/" + result.path
       console.log(metadata);
@@ -64,26 +74,30 @@ class Home extends Component {
     }
   }
 
-   renderImages() {
+    renderImages() {
 
     const gums = this.props.gumHashes.map((hash, index) => {
       return <Gumwall
         hash={this.props.gumHashes[index]}
+        url={this.state.metaDataUrl}
       />;
     })
     return gums;
   }
 
-  async load() {
-    let url = 'https://gumwall.infura-ipfs.io/ipfs/Qmd2qnLw9NbYsLiLaojhW5YLtR6DyKueUcXxzjC2hWYhfx';
-    let obj = await (await fetch(url)).json().then(function(result){
-           return result.image;
-         });
-        console.log(obj);
-      }
+  load = async() => {
+    try {
+      let url = 'https://gumwall.infura-ipfs.io/ipfs/Qmd2qnLw9NbYsLiLaojhW5YLtR6DyKueUcXxzjC2hWYhfx';
+      const obj = await fetch(url);
+      const result = await obj.json();
+      this.setState({ metaDataUrl: result.image })
+    } catch (err) {
+      console.log(err.message);
+     }
+    }
 
   render() {
-    console.log(this.load())
+    console.log(this.state.metaDataUrl)
     return (
       <Layout>
        <h1>Diffusion Sea - {this.state.ipfsHash}</h1>

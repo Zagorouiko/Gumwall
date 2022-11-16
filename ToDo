@@ -14,3 +14,10 @@ const meta = $.getJSON(this.props.hash, function(data) {
   return data;
 });
 console.log(meta);
+
+
+metadata url
+https://gumwall.infura-ipfs.io/ipfs/Qmd2qnLw9NbYsLiLaojhW5YLtR6DyKueUcXxzjC2hWYhfx
+
+image metaDataUrl
+https://gumwall.infura-ipfs.io/ipfs/QmckQ297XZ6Afe6H37ZkBmMk9K4fX85Wb7MxZ5uzssfjEV
