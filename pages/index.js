@@ -1,12 +1,11 @@
 import Head from 'next/head'
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import Layout from '../components/Layout';
 import Gumwall from '../components/Gumwall';
 import { Form, Message, Input, Button, Image } from 'semantic-ui-react';
 import gum from '../ethereum/gum';
 import { web3 } from '../ethereum/web3';
 import ipfs from '../ethereum/ipfs';
-import data from '../ethereum/data.json';
 import $ from 'jquery';
 
 
@@ -26,8 +25,8 @@ class Home extends Component {
   state = {
     address: '',
     errorMessage: '',
-    metaDataUrl: ''
-  };
+    metaDataUrls: []
+    };
 
   captureFile = (event) => {
         console.log('captured');
@@ -56,13 +55,15 @@ class Home extends Component {
       const cid = await ipfs.add(this.state.buffer);
 
 
-      //Take a wack at getting ipfs.add to work without sending in a file
-      //If can't get to work then look into using axios w/ pinata node
+      const obj = {
+          "name": "No time to explain!",
+          "description": "I said there was no time to explain, and I stand by that.",
+          "image": "https://gumwall.infura-ipfs.io/ipfs/" + cid.path
+      }
 
       //Hash that I get back from uploading the metadata JSON
-      const result = await ipfs.add(JSON.stringify(data));
+      const result = await ipfs.add(JSON.stringify(obj));
       const metadata = "https://gumwall.infura-ipfs.io/ipfs/" + result.path
-      console.log(metadata);
 
       await gum.methods
        .safeMint(this.state.address, metadata)
@@ -75,29 +76,26 @@ class Home extends Component {
   }
 
     renderImages() {
-
     const gums = this.props.gumHashes.map((hash, index) => {
       return <Gumwall
-        hash={this.props.gumHashes[index]}
-        url={this.state.metaDataUrl}
+        hash={this.state.metaDataUrls[index]}
       />;
     })
     return gums;
   }
 
-  load = async() => {
-    try {
-      let url = 'https://gumwall.infura-ipfs.io/ipfs/Qmd2qnLw9NbYsLiLaojhW5YLtR6DyKueUcXxzjC2hWYhfx';
-      const obj = await fetch(url);
-      const result = await obj.json();
-      this.setState({ metaDataUrl: result.image })
-    } catch (err) {
-      console.log(err.message);
-     }
+    load = async() => {
+      const urls = await Promise.all(
+      Array(this.props.gumHashes.length).fill().map(async (element, index) => {
+        const response = await fetch(this.props.gumHashes[index]);
+        const responseJSON = await response.json();
+        return responseJSON.image;
+      })
+    );
+    this.setState({ metaDataUrls: urls })
     }
 
   render() {
-    console.log(this.state.metaDataUrl)
     return (
       <Layout>
        <h1>Diffusion Sea - {this.state.ipfsHash}</h1>

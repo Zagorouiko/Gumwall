@@ -1,8 +1,8 @@
 0x8207765467f0A1fc8777cFA314dC4280072239b4
 
-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
+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
 
-git remote set-url origin https://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@github.com/Zagorouiko/Gumwall.git
+git remote set-url origin https://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@github.com/Zagorouiko/Gumwall.git
 
 https://gumwall.infura-ipfs.io/ipfs/QmckQ297XZ6Afe6H37ZkBmMk9K4fX85Wb7MxZ5uzssfjEV/metadata.json
 QmckQ297XZ6Afe6H37ZkBmMk9K4fX85Wb7MxZ5uzssfjEV
@@ -21,3 +21,13 @@ https://gumwall.infura-ipfs.io/ipfs/Qmd2qnLw9NbYsLiLaojhW5YLtR6DyKueUcXxzjC2hWYh
 
 image metaDataUrl
 https://gumwall.infura-ipfs.io/ipfs/QmckQ297XZ6Afe6H37ZkBmMk9K4fX85Wb7MxZ5uzssfjEV
+
+
+
+const tempArray = [];
+let urls = await Promise.all(this.props.gumHashes.forEach(async (hash, index) => {
+  const response = await fetch(hash);
+  const responseJSON = await response.json();
+  return responseJSON;
+}));
+console.log(urls);

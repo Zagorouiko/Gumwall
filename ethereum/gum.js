@@ -4,7 +4,7 @@ import Gum from './build/contracts.json';
 
 const instance = new web3.eth.Contract(
   Gum.nft.Gum.abi,
-  "0x0499F1a372F9B1C886bF390c9aCE399d5cAA7194"
+  "0xF1f120D8a3B6Ac55918Ea48E96cEd3D8Fe0a998B"
 );
 
 export default instance;

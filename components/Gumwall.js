@@ -5,7 +5,7 @@ class Gumwall extends Component {
 
   render() {
     return (
-      <Image src={this.props.url}>
+      <Image src={this.props.hash}>
       </Image>
     );
   }
